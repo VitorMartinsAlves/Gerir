@@ -9,7 +9,8 @@ namespace APIgerir.Interfaces
     interface IUsuarioRepositorio
     {
 
-        /// <summary>
+        Usuario BuscarPorId(Guid Id);
+        /// <summary>;
         /// Cadastra um novo usuario
         /// </summary>
         /// <param name="usuario">Contem os dados do usuario</param>
