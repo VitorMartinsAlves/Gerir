@@ -35,7 +35,8 @@ namespace APIgerir.Controllers
                 _usuarioRepositorio.Cadastrar(usuario);
 
                 return Ok(usuario);
-            } catch (System.Exception ex)
+            }
+            catch (System.Exception ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -52,7 +53,8 @@ namespace APIgerir.Controllers
                 var token = GerarJsonWebToken(usuarioexiste);
                 return Ok(token);
 
-            } catch (System.Exception ex)
+            }
+            catch (System.Exception ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -88,13 +90,53 @@ namespace APIgerir.Controllers
         {
             try
             {
-                //pega as informações referentes as claims declaradas antes
                 var claimUsuario = HttpContext.User.Claims;
-                //pega o id do usuario na claim jti
                 var usuarioId = claimUsuario.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Jti);
                 var usuario = _usuarioRepositorio.BuscarPorId(new Guid(usuarioId.Value));
                 return Ok(usuario);
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [Authorize]
+        [HttpPut]
+        public IActionResult Editar(Usuario usuario)
+        {
+            try
+            {
+                var claimUsuario = HttpContext.User.Claims;
+                //pega o id do usuario na claim jti
+                var usuarioId = claimUsuario.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Jti);
+
+                usuario.IdUsuario = new Guid(usuarioId.Value);
+
+                _usuarioRepositorio.Editar(usuario);
+
+                return Ok(usuario);
+            }
+            catch (System.Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [Authorize]
+        [HttpDelete]
+        public IActionResult Excluir(Usuario usuario)
+        {
+            try
+            {
+                var claimUsuario = HttpContext.User.Claims;
+                //pega o id do usuario na claim jti
+                var usuarioId = claimUsuario.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Jti);
+
+                _usuarioRepositorio.Remover(new Guid(usuarioId.Value));
+
+                return Ok();
+            }
+            catch (System.Exception ex)
             {
                 return BadRequest(ex.Message);
             }

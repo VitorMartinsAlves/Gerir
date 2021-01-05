@@ -42,10 +42,10 @@ namespace APIgerir.Repositorios
         public Usuario Editar(Usuario usuario)
         {
             try { 
-            var usuarioexiste = BuscarPorId(usuario.id);
+            var usuarioexiste = BuscarPorId(usuario.IdUsuario);
             if(usuarioexiste == null)
             {
-                throw new Exeception("Usuario nao encontrado")
+                    throw new Exception("Usuario nao encontrado");
 
                 
             }
@@ -60,9 +60,9 @@ namespace APIgerir.Repositorios
 
                 return usuarioexiste;
             }
-            catch
+            catch(System.Exception ex)
             {
-
+                throw new Exception(ex.Message);
             }
         }
 
@@ -82,7 +82,19 @@ namespace APIgerir.Repositorios
 
         public Usuario Remover(Guid Id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var usuario = BuscarPorId(Id);
+
+                _context.Usuarios.Remove(usuario);
+                _context.SaveChanges();
+
+                return usuario;
+
+            }catch(System.Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
     }
 }
