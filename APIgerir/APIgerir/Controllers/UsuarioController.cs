@@ -26,7 +26,6 @@ namespace APIgerir.Controllers
             _usuarioRepositorio = new UsuarioRepositorio();
         }
 
-
         [HttpPost]
         public IActionResult Cadastrar(Usuario usuario)
         {

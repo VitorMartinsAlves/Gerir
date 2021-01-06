@@ -10,6 +10,7 @@ namespace APIgerir.Repositorios
 {
     public class UsuarioRepositorio : IUsuarioRepositorio
     {
+        //
         private readonly ControleContext _context = new ControleContext();
         public Usuario Cadastrar(Usuario usuario)
         {
@@ -30,7 +31,7 @@ namespace APIgerir.Repositorios
             try
             {
                 var usuario = _context.Usuarios.Find(IdUsuario);
-                //sempre retornar a variavel declada, nunca o escopo do metodo
+                //sempre retornar a variavel declarada, nunca o escopo do metodo
                 return (usuario);
             }catch(System.Exception ex)
             {
@@ -74,6 +75,7 @@ namespace APIgerir.Repositorios
                 var usuario = _context.Usuarios.FirstOrDefault(c => c.Email == email && c.Senha == senha);
                 return usuario;
 
+               
             }catch(Exception ex)
             {
                 throw new Exception(ex.Message);

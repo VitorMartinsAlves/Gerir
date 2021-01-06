@@ -7,6 +7,9 @@ namespace APIgerir.Dominios
 {
     public partial class Tarefa
     {
+        public Tarefa (){
+            IdTarefa = Guid.NewGuid();
+            }
         public Guid IdTarefa { get; set; }
         public string Titulo { get; set; }
         public string Descricao { get; set; }

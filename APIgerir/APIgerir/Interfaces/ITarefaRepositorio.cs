@@ -8,9 +8,11 @@ namespace APIgerir.Interfaces
 {
     interface ITarefaRepositorio
     {
-        Tarefa BuscarPorId(Guid Id);
+        Tarefa BuscarPorId(Guid IdTarefa);
         Tarefa Cadastrar(Tarefa tarefa);
-        Tarefa Editar(Tarefa tarefa);
-        Tarefa Remover(Guid Id);
+        Tarefa Remover(Guid IdTarefa);
+        List<Tarefa> ListarTodos(Guid IdUsuario);
+        Tarefa AlterarStatus(Guid IdTarefa);
+
     }
 }
