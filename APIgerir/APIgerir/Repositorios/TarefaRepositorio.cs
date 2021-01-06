@@ -77,7 +77,7 @@ namespace APIgerir.Repositorios
             throw new NotImplementedException();
         }
 
-        public Tarefa EditarTarefa(Tarefa tarefa)
+        public Usuario EditarTarefa(Tarefa tarefa)
         {
             try
             {

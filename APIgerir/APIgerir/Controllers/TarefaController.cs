@@ -68,14 +68,14 @@ namespace APIgerir.Controllers
             }
         }
 
-        [HttpPut("alterarstatus")]
+        [HttpPut("alterarstatus/{IdTarefa}")]
         public IActionResult AlterarStatus(Tarefa tarefa)
         {
             try
             {
-               // var novoStatus = _tarefaRepositorio.AlterarStatus(tarefa);
+               var novoStatus = _tarefaRepositorio.AlterarStatus(tarefa);
 
-                return Ok(tarefa);
+                return Ok(novoStatus);
             }
             catch (System.Exception ex)
             {
