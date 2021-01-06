@@ -13,6 +13,7 @@ namespace APIgerir.Interfaces
         Tarefa Remover(Guid IdTarefa);
         List<Tarefa> ListarTodos(Guid IdUsuario);
         Tarefa AlterarStatus(Guid IdTarefa);
+        Tarefa EditarTarefa(Tarefa tarefa);
 
     }
 }

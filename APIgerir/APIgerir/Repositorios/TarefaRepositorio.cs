@@ -76,5 +76,32 @@ namespace APIgerir.Repositorios
         {
             throw new NotImplementedException();
         }
+
+        public Tarefa EditarTarefa(Tarefa tarefa)
+        {
+            try
+            {
+                var tarefaExiste = BuscarPorId(tarefa.IdTarefa);
+                if (tarefaExiste == null)
+                {
+                    throw new Exception("Tarefa nao encontrada");
+
+
+                }
+                tarefaExiste.Titulo = tarefa.Titulo;
+                tarefaExiste.Descricao = tarefa.Descricao;
+                tarefaExiste.Categoria = tarefa.Categoria;
+                tarefaExiste.DataEntrega = tarefa.DataEntrega;
+                _context.Tarefas.Update(tarefaExiste);
+
+                _context.SaveChanges();
+
+                return tarefaExiste;
+            }
+            catch (System.Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
     }
 }

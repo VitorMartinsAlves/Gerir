@@ -21,7 +21,7 @@ namespace APIgerir.Controllers
         {
             _tarefaRepositorio = new TarefaRepositorio();
         }
-            
+
         [HttpPost]
         public IActionResult Cadastrar(Tarefa tarefa)
         {
@@ -41,13 +41,13 @@ namespace APIgerir.Controllers
         {
             try
             {
-                
-               _tarefaRepositorio.Remover(tarefa.IdTarefa);
+
+                _tarefaRepositorio.Remover(tarefa.IdTarefa);
 
                 return Ok();
 
             }
-            catch(System.Exception ex)
+            catch (System.Exception ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -58,8 +58,8 @@ namespace APIgerir.Controllers
         {
             try
             {
-               // _tarefaRepositorio.(tarefa) ;
-                
+                var tarefas = _tarefaRepositorio.EditarTarefa(tarefa); ;
+
                 return Ok(tarefa);
             }
             catch (System.Exception ex)
@@ -73,7 +73,7 @@ namespace APIgerir.Controllers
         {
             try
             {
-                //
+               // var novoStatus = _tarefaRepositorio.AlterarStatus(tarefa);
 
                 return Ok(tarefa);
             }
@@ -88,15 +88,29 @@ namespace APIgerir.Controllers
         {
             try {
 
-                var tarefa = _tarefaRepositorio.BuscarPorId(IdTarefa); 
+                var tarefa = _tarefaRepositorio.BuscarPorId(IdTarefa);
 
 
-            return Ok(tarefa);
+                return Ok(tarefa);
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
+        }
+
+        [HttpGet("listar")]
+        public IActionResult ListarTodos(Guid IdUsuario)
+        {
+            try { 
+            var listar = _tarefaRepositorio.ListarTodos(IdUsuario);
+            return Ok(listar);
+            }catch(System.Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+
         }
 
     }

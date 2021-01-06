@@ -100,6 +100,7 @@ namespace APIgerir.Controllers
             }
         }
 
+
         [Authorize]
         [HttpPut]
         public IActionResult Editar(Usuario usuario)
