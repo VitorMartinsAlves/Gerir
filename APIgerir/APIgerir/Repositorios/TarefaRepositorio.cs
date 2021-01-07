@@ -74,10 +74,22 @@ namespace APIgerir.Repositorios
 
         public Tarefa AlterarStatus(Guid IdTarefa)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var tarefa = BuscarPorId(IdTarefa);
+                //Altera o valor do status conforme estiver no banco
+                //Se estiver true o inverso é false e vice e versa
+                tarefa.Status = !tarefa.Status;
+                _context.Tarefas.Update(tarefa);
+                _context.SaveChanges();
+                return tarefa;
+            }
+            catch (System.Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
-
-        public Usuario EditarTarefa(Tarefa tarefa)
+        public Tarefa EditarTarefa(Tarefa tarefa)
         {
             try
             {
@@ -92,11 +104,11 @@ namespace APIgerir.Repositorios
                 tarefaExiste.Descricao = tarefa.Descricao;
                 tarefaExiste.Categoria = tarefa.Categoria;
                 tarefaExiste.DataEntrega = tarefa.DataEntrega;
-                _context.Tarefas.Update(tarefaExiste);
+                _context.Tarefas.Update(tarefa);
 
                 _context.SaveChanges();
 
-                return tarefaExiste;
+                return tarefa;
             }
             catch (System.Exception ex)
             {

@@ -1,6 +1,7 @@
 ﻿using APIgerir.Dominios;
 using APIgerir.Interfaces;
 using APIgerir.Repositorios;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -54,11 +55,21 @@ namespace APIgerir.Controllers
         }
 
         [HttpPut]
-        public IActionResult Editar(Tarefa tarefa)
+        public IActionResult Editar(Guid idTarefa, Tarefa tarefa)
         {
             try
             {
-                var tarefas = _tarefaRepositorio.EditarTarefa(tarefa); ;
+                var usuarioId = HttpContext.User.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Jti);
+
+                var tarefaexiste = _tarefaRepositorio.BuscarPorId(idTarefa);
+                if (tarefaexiste == null)
+                    return NotFound();
+
+                if (tarefaexiste.IdUsuario != new Guid(usuarioId.Value))
+                    return Unauthorized("Usuario não autorizado");
+
+                tarefa.IdTarefa = idTarefa;
+                _tarefaRepositorio.EditarTarefa(tarefa);
 
                 return Ok(tarefa);
             }
@@ -67,15 +78,24 @@ namespace APIgerir.Controllers
                 return BadRequest(ex.Message);
             }
         }
-
-        [HttpPut("alterarstatus/{IdTarefa}")]
-        public IActionResult AlterarStatus(Tarefa tarefa)
+        [Authorize]
+        [HttpPut("status/{IdTarefa}")]
+        public IActionResult AlterarStatus(Guid idTarefa)
         {
             try
             {
-               var novoStatus = _tarefaRepositorio.AlterarStatus(tarefa);
+                var usuarioId = HttpContext.User.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Jti);
 
-                return Ok(novoStatus);
+                var tarefa = _tarefaRepositorio.BuscarPorId(idTarefa);
+                if (tarefa == null)
+                    return NotFound();
+
+                if (tarefa.IdUsuario != new Guid(usuarioId.Value))
+                    return Unauthorized("Usuario não autorizado");
+
+                _tarefaRepositorio.AlterarStatus(idTarefa);
+
+                return Ok(idTarefa);
             }
             catch (System.Exception ex)
             {
@@ -83,12 +103,21 @@ namespace APIgerir.Controllers
             }
         }
 
+        [Authorize]
         [HttpGet("buscar{id}")]
         public IActionResult BuscarPorId(Guid IdTarefa)
         {
             try {
 
+                //Pega o valor do usuario que está logado
+                var usuarioId = HttpContext.User.Claims.FirstOrDefault (c => c.Type == JwtRegisteredClaimNames.Jti);
+
                 var tarefa = _tarefaRepositorio.BuscarPorId(IdTarefa);
+                if (tarefa == null)
+                    return NotFound();
+
+                if (tarefa.IdUsuario != new Guid(usuarioId.Value))
+                    return Unauthorized("Usuario não autorizado");
 
 
                 return Ok(tarefa);

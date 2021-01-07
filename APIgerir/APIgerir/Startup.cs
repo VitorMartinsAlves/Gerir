@@ -32,7 +32,9 @@ namespace APIgerir
             ///AddNewtonsoftJson faz com que o loop de ciclos seja cortado
             services.AddControllers()
                 .AddNewtonsoftJson(options =>{
-                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;   
+                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+                    options.SerializerSettings.NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore;
+
             });
             services.AddSwaggerGen(c =>
             {
