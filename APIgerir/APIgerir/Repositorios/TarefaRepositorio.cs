@@ -28,12 +28,12 @@ namespace APIgerir.Repositorios
         }
 
         public List<Tarefa> ListarTodos(Guid IdUsuario)
-        {
+            {
             try
             {
-                ///All procura todos que estejam dentro do parametro desejad               
-                var tarefa = _context.Tarefas.Where(c => c.IdUsuario == IdUsuario);
-                return tarefa.ToList();
+                return _context.Tarefas.Where(
+                            c => c.IdUsuario == IdUsuario
+                            ).ToList();
             }
             catch (Exception ex)
             {

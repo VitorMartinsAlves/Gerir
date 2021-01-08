@@ -37,15 +37,25 @@ namespace APIgerir.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        [HttpDelete]
-        public IActionResult Excluir(Tarefa tarefa)
+        [Authorize]
+        [HttpDelete("{id}")]
+        public IActionResult Excluir(Guid idTarefa)
         {
             try
             {
 
-                _tarefaRepositorio.Remover(tarefa.IdTarefa);
+                var usuarioId = HttpContext.User.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Jti);
 
-                return Ok();
+                var tarefaexiste = _tarefaRepositorio.BuscarPorId(idTarefa);
+                if (tarefaexiste == null)
+                    return NotFound();
+
+                if (tarefaexiste.IdUsuario != new Guid(usuarioId.Value))
+                    return Unauthorized("Usuario não autorizado");
+
+                _tarefaRepositorio.Remover(idTarefa);
+
+                return Ok(idTarefa);
 
             }
             catch (System.Exception ex)
@@ -107,10 +117,11 @@ namespace APIgerir.Controllers
         [HttpGet("buscar{id}")]
         public IActionResult BuscarPorId(Guid IdTarefa)
         {
-            try {
+            try
+            {
 
                 //Pega o valor do usuario que está logado
-                var usuarioId = HttpContext.User.Claims.FirstOrDefault (c => c.Type == JwtRegisteredClaimNames.Jti);
+                var usuarioId = HttpContext.User.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Jti);
 
                 var tarefa = _tarefaRepositorio.BuscarPorId(IdTarefa);
                 if (tarefa == null)
@@ -128,19 +139,32 @@ namespace APIgerir.Controllers
             }
         }
 
-        [HttpGet("listar")]
-        public IActionResult ListarTodos(Guid IdUsuario)
+        [Authorize]
+        [HttpGet]
+        public IActionResult ListarTodos()
         {
-            try { 
-            var listar = _tarefaRepositorio.ListarTodos(IdUsuario);
-            return Ok(listar);
-            }catch(System.Exception ex)
             {
-                return BadRequest(ex.Message);
+                try
+                {
+                    //Pega o valor do usuário que esta logado
+                    var usuarioid = HttpContext.User.Claims.FirstOrDefault(
+                                    c => c.Type == JwtRegisteredClaimNames.Jti
+                                );
+
+                    var tarefas = _tarefaRepositorio.ListarTodos(
+                                        new System.Guid(usuarioid.Value)
+                                  );
+
+                    return Ok(new { data = tarefas });
+                }
+                catch (System.Exception ex)
+                {
+                    return BadRequest(ex.Message);
+                }
+
+
             }
 
-
         }
-
     }
 }

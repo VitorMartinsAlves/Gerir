@@ -31,11 +31,13 @@ namespace APIgerir
         {
             ///AddNewtonsoftJson faz com que o loop de ciclos seja cortado
             services.AddControllers()
-                .AddNewtonsoftJson(options =>{
-                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+                .AddNewtonsoftJson(options =>
+                {
+                    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
                     options.SerializerSettings.NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore;
 
-            });
+                });
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "APIgerir", Version = "Beta" });
@@ -54,8 +56,19 @@ namespace APIgerir
                     ValidAudience = "gerir.com.br",
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("GerirChaveSeguranca"))
                 };
+                
+            });
+            services.AddCors(options =>
+            {
+                options.AddPolicy("PolicyCors",
+                    build => build.AllowAnyOrigin()
+                                       .AllowAnyMethod()
+                                       .AllowAnyHeader()
+
+            );
             });
         }
+
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -74,6 +87,8 @@ namespace APIgerir
             app.UseAuthentication();
 
             app.UseAuthorization();
+
+            app.UseCors("PolicyCors");
 
             app.UseEndpoints(endpoints =>
             {

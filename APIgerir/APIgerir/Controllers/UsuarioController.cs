@@ -50,7 +50,7 @@ namespace APIgerir.Controllers
                 if (usuarioexiste == null)
                     return NotFound();
                 var token = GerarJsonWebToken(usuarioexiste);
-                return Ok(token);
+                return Ok(new {token = token});
 
             }
             catch (System.Exception ex)
